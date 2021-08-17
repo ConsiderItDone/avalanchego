@@ -1707,6 +1707,7 @@ func TestOptimisticAtomicImport(t *testing.T) {
 			NetworkID:    vm.ctx.NetworkID,
 			BlockchainID: vm.ctx.ChainID,
 		}},
+		vm:          vm,
 		SourceChain: vm.ctx.XChainID,
 		ImportedInputs: []*avax.TransferableInput{{
 			UTXOID: avax.UTXOID{
