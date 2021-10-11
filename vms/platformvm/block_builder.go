@@ -102,6 +102,7 @@ func (m *blockBuilder) AddVerifiedTx(tx *Tx) error {
 		return errMempoolReentrancy
 	}
 
+	tx.SetVM(m.vm)
 	if err := m.Add(tx); err != nil {
 		return err
 	}
