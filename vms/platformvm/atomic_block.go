@@ -157,6 +157,7 @@ func (ab *AtomicBlock) Accept() error {
 			err,
 		)
 	}
+	tx.SetVM(ab.vm)
 	if err := tx.Accept(ab.vm.ctx, batch); err != nil {
 		return fmt.Errorf(
 			"failed to atomically accept tx %s in block %s: %w",
