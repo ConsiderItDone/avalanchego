@@ -170,7 +170,7 @@ func (tx *UnsignedExportTx) Accept(ctx *snow.Context, batch database.Batch) erro
 		elems[i] = elem
 	}
 
-	tx.vm.pubsub.Publish(tx.ID(), NewPubSubExportFilterer(tx))
+	tx.vm.pubsub.Publish(NewPubSubExportFilterer(tx))
 
 	return ctx.SharedMemory.Apply(map[ids.ID]*atomic.Requests{tx.DestinationChain: {PutRequests: elems}}, batch)
 }

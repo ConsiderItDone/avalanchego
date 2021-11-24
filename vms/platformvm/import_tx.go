@@ -185,7 +185,7 @@ func (tx *UnsignedImportTx) Accept(ctx *snow.Context, batch database.Batch) erro
 		utxoIDs[i] = utxoID[:]
 	}
 
-	tx.vm.pubsub.Publish(tx.ID(), NewPubSubFilterer(&tx.BaseTx))
+	tx.vm.pubsub.Publish(NewPubSubFilterer(&tx.BaseTx))
 	return ctx.SharedMemory.Apply(map[ids.ID]*atomic.Requests{tx.SourceChain: {RemoveRequests: utxoIDs}}, batch)
 }
 
