@@ -30,6 +30,8 @@ var (
 type UnsignedImportTx struct {
 	BaseTx `serialize:"true"`
 
+	vm *VM
+
 	// Which chain to consume the funds from
 	SourceChain ids.ID `serialize:"true" json:"sourceChain"`
 
@@ -45,6 +47,10 @@ func (tx *UnsignedImportTx) InitCtx(ctx *snow.Context) {
 	for _, in := range tx.ImportedInputs {
 		in.FxID = secp256k1fx.ID
 	}
+}
+
+func (tx *UnsignedImportTx) SetVM(vm *VM) {
+	tx.vm = vm
 }
 
 // InputUTXOs returns the UTXOIDs of the imported funds
@@ -198,6 +204,8 @@ func (tx *UnsignedImportTx) AtomicAccept(ctx *snow.Context, batch database.Batch
 	if err != nil {
 		return err
 	}
+	tx.vm.pubsub.Publish(NewPubSubFilterer(&tx.BaseTx))
+
 	return ctx.SharedMemory.Apply(map[ids.ID]*atomic.Requests{chainID: requests}, batch)
 }
 
@@ -280,6 +288,7 @@ func (vm *VM) newImportTx(
 			Outs:         outs,
 			Ins:          ins,
 		}},
+		vm:             vm,
 		SourceChain:    chainID,
 		ImportedInputs: importedInputs,
 	}

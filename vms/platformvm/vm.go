@@ -6,6 +6,7 @@ package platformvm
 import (
 	"errors"
 	"fmt"
+	"github.com/ava-labs/avalanchego/pubsub"
 	"time"
 
 	"github.com/gorilla/rpc/v2"
@@ -141,6 +142,8 @@ type VM struct {
 	currentBlocks map[ids.ID]Block
 
 	lastVdrUpdate time.Time
+
+	pubsub *pubsub.Server
 }
 
 // Initialize this blockchain.
@@ -180,6 +183,9 @@ func (vm *VM) Initialize(
 	vm.toEngine = msgs
 
 	vm.codecRegistry = linearcodec.NewDefault()
+
+	vm.pubsub = pubsub.New(ctx.NetworkID, ctx.Log)
+
 	if err := vm.fx.Initialize(vm); err != nil {
 		return err
 	}
@@ -455,6 +461,7 @@ func (vm *VM) CreateHandlers() (map[string]*common.HTTPHandler, error) {
 		"": {
 			Handler: server,
 		},
+		"/events": {LockOptions: common.NoLock, Handler: vm.pubsub},
 	}, nil
 }
 
