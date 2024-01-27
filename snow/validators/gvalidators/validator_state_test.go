@@ -1,4 +1,4 @@
-// Copyright (C) 2019-2023, Ava Labs, Inc. All rights reserved.
+// Copyright (C) 2019-2024, Ava Labs, Inc. All rights reserved.
 // See the file LICENSE for licensing terms.
 
 package gvalidators
@@ -188,8 +188,8 @@ func TestPublicKeyDeserialize(t *testing.T) {
 	require.NoError(err)
 	pk := bls.PublicFromSecretKey(sk)
 
-	pkBytes := pk.Serialize()
-	pkDe := new(bls.PublicKey).Deserialize(pkBytes)
+	pkBytes := bls.SerializePublicKey(pk)
+	pkDe := bls.DeserializePublicKey(pkBytes)
 	require.NotNil(pkDe)
 	require.Equal(pk, pkDe)
 }

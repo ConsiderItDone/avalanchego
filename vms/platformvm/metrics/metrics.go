@@ -1,4 +1,4 @@
-// Copyright (C) 2019-2023, Ava Labs, Inc. All rights reserved.
+// Copyright (C) 2019-2024, Ava Labs, Inc. All rights reserved.
 // See the file LICENSE for licensing terms.
 
 package metrics
@@ -110,9 +110,9 @@ func New(
 
 	errs := wrappers.Errs{Err: err}
 	apiRequestMetrics, err := metric.NewAPIInterceptor(namespace, registerer)
+	errs.Add(err)
 	m.APIInterceptor = apiRequestMetrics
 	errs.Add(
-		err,
 		registerer.Register(m.timeUntilUnstake),
 		registerer.Register(m.timeUntilSubnetUnstake),
 		registerer.Register(m.localStake),
